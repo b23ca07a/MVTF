@@ -518,7 +518,7 @@ class TFGridNet(nn.Module):
 
         batch = self.pad2(batch.view([n_batch, self.num_spk, -1]), n_samples)
 
-        batch = batch * mix_std_  # reverse the RMS normalization
+        batch = -(batch * mix_std_)*0.2  # reverse the RMS normalization
 
         # batch = [batch[:, src] for src in range(self.num_spk)]
 
