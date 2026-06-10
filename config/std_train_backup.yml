@@ -1,0 +1,141 @@
+encoder:
+    type: Encoder
+    args:
+        kernel_size: 16
+        out_channels: 256
+
+decoder:
+    type: Decoder
+    args:
+        in_channels: 256
+        out_channels: 1
+        kernel_size: 16
+        stride: 8
+        bias: False
+
+trainset:
+    type: tr_dataset
+    args:
+        inter_scp: /public/home/qinxy/jz/data/avse1_data/train/inter.scp
+        # s1_scp: /public/home/qinxy/zbang/data/wsj/wav8k/min/list/train/s1.scp
+        # s2_scp: /public/home/qinxy/zbang/data/wsj/wav8k/min/list/train/s2.scp
+        tar_scp: /public/home/qinxy/jz/data/avse1_data/train/tar.scp
+        lip_scp: /public/home/qinxy/jz/data/avse1_data/train/lip.scp
+        fs: 16000
+
+trainloader:
+    type: TruncateDataLoader
+    args:
+        trun_range: [48000, 48000]
+        step: 1
+        shuffle: False
+        batch_size: 2
+        num_workers: 4
+        drop_last: False
+
+testset:
+    type: tr_dataset
+    args:
+        inter_scp: /public/home/qinxy/jz/data/avse1_data/dev/inter.scp
+        # s1_scp: /public/home/qinxy/zbang/data/wsj/wav8k/min/list/train/s1.scp
+        # s2_scp: /public/home/qinxy/zbang/data/wsj/wav8k/min/list/train/s2.scp
+        tar_scp: /public/home/qinxy/jz/data/avse1_data/dev/tar.scp
+        lip_scp: /public/home/qinxy/jz/data/avse1_data/dev/lip.scp
+        fs: 16000
+
+testloader:
+    type: TruncateDataLoader
+    args:
+        trun_range: [48000, 48000]
+        batch_size: 2
+        num_workers: 4
+        shuffle: False
+        drop_last: False
+
+inferset:
+    type: inf_dataset
+    args:
+        mix_scp: /public/home/qinxy/jz/data/avse2_data/test/mix.scp
+        # s1_scp: /public/home/qinxy/zbang/data/wsj/wav8k/min/list/train/s1.scp
+        # s2_scp: /public/home/qinxy/zbang/data/wsj/wav8k/min/list/train/s2.scp
+        lip_scp: /public/home/qinxy/jz/data/avse2_data/test/mouth.scp
+        fs: 16000
+
+inferloader:
+    type: InfDataLoader
+    args:
+        trun_range: [64000, 64000]
+        batch_size: 1
+        num_workers: 4
+        shuffle: False
+        drop_last: False
+
+optimizer:
+    type: Adam
+    args:
+        lr: 0.0001
+        weight_decay: 0
+
+# # wsj0-2mix
+# tfgridnet_kwargs:
+#     n_srcs: 2
+#     n_fft: 128
+#     stride: 64
+#     window: hann
+#     n_imics: 1
+#     n_layers: 6
+#     lstm_hidden_units: 192
+#     attn_n_head: 4
+#     attn_approx_qk_dim: 512
+#     emb_dim: 48
+#     emb_ks: 4
+#     emb_hs: 1
+#     activation: prelu
+#     eps: 1.0e-5
+#     use_builtin_complex: False
+#     ref_channel: -1
+
+# avse challenge old
+# tfgridnet_kwargs:
+#     n_srcs: 1
+#     n_fft: 512
+#     stride: 256
+#     window: hann
+#     n_imics: 1
+#     n_layers: 3
+#     lstm_hidden_units: 256
+#     attn_n_head: 4
+#     attn_approx_qk_dim: 256
+#     emb_dim: 128
+#     emb_ks: 4
+#     emb_hs: 2
+#     activation: prelu
+#     eps: 1.0e-5
+#     use_builtin_complex: True
+#     ref_channel: -1
+
+# avse challenge original
+tfgridnet_kwargs:
+    n_srcs: 1
+    n_fft: 128
+    stride: 64
+    window: hann
+    n_imics: 1
+    n_layers: 6
+    lstm_hidden_units: 192
+    attn_n_head: 6
+    attn_approx_qk_dim: 512
+    emb_dim: 48
+    emb_ks: 4
+    emb_hs: 2
+    activation: prelu
+    eps: 1.0e-5
+    use_builtin_complex: True
+    ref_channel: -1
+
+stft_kwargs:
+    n_fft: 128
+    win_length: 128
+    hop_length: 64
+    window: hann
+    use_builtin_complex: True

@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+
+ckpt/
+trainer/
+log/
+log1/
+logs/
+dest_infer/
+
+infer_one_video/*.wav
+infer_one_video/*.npz
+
+*.pth
+*.pth.tar

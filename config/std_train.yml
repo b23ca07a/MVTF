@@ -1,0 +1,126 @@
+encoder:
+    type: Encoder
+    args:
+        kernel_size: 16
+        out_channels: 256
+
+decoder:
+    type: Decoder
+    args:
+        in_channels: 256
+        out_channels: 1
+        kernel_size: 16
+        stride: 8
+        bias: False
+
+trainset:
+    type: AVSyncDataset
+    args:
+        noise_scp: /public/home/qinxy/jz/data/avse1_data/train/inter_noise.scp
+        meta_file: /public/home/qinxy/photon/dataset/MEAD_SCP/3_random_view_3_train.scp
+        # inter_scp: /public/home/qinxy/jz/data/avse1_data/train/inter.scp
+        # # s1_scp: /public/home/qinxy/zbang/data/wsj/wav8k/min/list/train/s1.scp
+        # # s2_scp: /public/home/qinxy/zbang/data/wsj/wav8k/min/list/train/s2.scp
+        # tar_scp: /public/home/qinxy/jz/data/avse1_data/train/tar.scp
+        # lip_scp: /public/home/qinxy/jz/data/avse1_data/train/lip.scp
+        fs: 16000
+
+trainloader:
+    type: FixedLipLoader
+    args:
+        # FixedLipLoader: [48000, 48000]
+        # step: 1
+        shuffle: True
+        batch_size: 1
+        num_workers: 2
+        drop_last: False
+
+testset:
+    type: AVSyncDataset
+    args:
+        noise_scp: /public/home/qinxy/jz/data/avse1_data/dev/inter_noise.scp
+        meta_file: /public/home/qinxy/photon/dataset/MEAD_SCP/3_random_view_3_val.scp
+        # inter_scp: /public/home/qinxy/jz/data/avse1_data/dev/inter.scp
+        # # s1_scp: /public/home/qinxy/zbang/data/wsj/wav8k/min/list/train/s1.scp
+        # # s2_scp: /public/home/qinxy/zbang/data/wsj/wav8k/min/list/train/s2.scp
+        # tar_scp: /public/home/qinxy/jz/data/avse1_data/dev/tar.scp
+        # lip_scp: /public/home/qinxy/jz/data/avse1_data/dev/lip.scp
+        fs: 16000
+
+testloader:
+    type: FixedLipLoader
+    args:
+        # trun_range: [48000, 48000]
+        batch_size: 1
+        num_workers: 2
+        shuffle: True
+        drop_last: False
+
+inferset:
+    type: AVSyncDataset
+    args:
+        noise_scp: /public/home/qinxy/jz/data/avse1_data/dev/inter_noise.scp
+        meta_file: /public/home/qinxy/photon/dataset/MEAD_SCP/concat_view_repeat_test.scp
+        # s1_scp: /public/home/qinxy/zbang/data/wsj/wav8k/min/list/train/s1.scp
+        # s2_scp: /public/home/qinxy/zbang/data/wsj/wav8k/min/list/train/s2.scp
+        # lip_scp: /public/home/qinxy/jz/data/avse2_data/test/mouth.scp
+        fs: 16000
+        #30
+        #[]*30 -> []*25 0.00333s -> 0.0025s
+        #25 
+        #16000
+
+inferloader:
+    type: FixedLipLoader
+    args:
+        # FixedLipLoader: [48000, 48000]
+        # step: 1
+        shuffle: True
+        batch_size: 1
+        num_workers: 2
+        drop_last: False
+
+optimizer:
+    type: Adam
+    args:
+        lr: 0.001
+        weight_decay: 0
+
+
+
+# avse challenge original
+tfgridnet_kwargs:
+    n_srcs: 1
+    n_fft: 128
+    stride: 64
+    window: hann
+    n_imics: 1
+    n_layers: 6
+    lstm_hidden_units: 240
+    attn_n_head: 4
+    attn_approx_qk_dim: 512
+    emb_dim: 128
+    emb_ks: 1
+    emb_hs: 1
+    activation: prelu
+    eps: 1.0e-5
+    use_builtin_complex: True
+    ref_channel: -1
+
+stft_kwargs:
+    n_fft: 128
+    win_length: 128
+    hop_length: 64
+    window: hann
+    use_builtin_complex: True
+
+RandomRirGenerator_kwargs:
+    fs: 16000
+    t60_range: [ 0.05, 0.55 ] # rvb:[0.05, 0.7]
+    roomdim_range_x: [ 4.0, 8.0 ]
+    roomdim_range_y: [ 2.0, 6.0 ]
+    roomdim_range_z: [ 3.0, 4.0 ]
+    micpos_range_z: [ 0.8, 1.2 ]
+    micpos: linear
+    # micarray: custom_linear6
+    micarray: custom4
